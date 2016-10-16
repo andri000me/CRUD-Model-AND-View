@@ -8,7 +8,11 @@
 	$db = new Config;
 	$mapel = new Mapel;
 
-	$data_mapel = $mapel->SELECT_ALL();
+	if (isset($_GET['search'])) {
+		$data_mapel = $mapel->LIKE($_GET['search']);
+	} else {
+		$data_mapel = $mapel->SELECT_ALL();
+	}
 	?>
 
 <h1>Data Mata Pelajaran</h1>
@@ -19,6 +23,10 @@
 <br><br>
 
 <a href="tambah_mapel.php">Tambah Data Mata Pelajaran</a>
+<form action="mapel.php" method="GET">
+	Search : <input type="text" name="search">
+	<input type="submit" value="Cari">
+</form>
 <table border="1">
 	<thead>
 		<tr>
@@ -37,7 +45,7 @@
 				<td>
 					<a href="edit_mapel.php?id=<?php echo $value['id_mapel'] ?>">Edit</a>
 					|
-					<a href="process/hapus_mapel.php?id=<?php echo $value['id_mapel'] ?>">Hapus</a>
+					<a href="process/hapus_mapel.php?id=<?php echo $value['id_mapel'] ?>" onclick="return confirm('Yakin akan menghapus data ini ?')">Hapus</a>
 				</td>
 			</tr>
 		<?php

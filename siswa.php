@@ -5,7 +5,11 @@
 	use models\_model_siswa\Model_Siswa as Siswa;
 	$siswa = new Siswa;
 
-	$data_siswa = $siswa->SELECT_ALL();
+	if (isset($_GET['search'])) {
+		$data_siswa = $siswa->LIKE($_GET['search']);
+	} else {
+		$data_siswa = $siswa->SELECT_ALL();
+	}
 ?>
 
 <h1>Data Siswa</h1>
@@ -16,6 +20,10 @@
 <br><br>
 
 <a href="tambah_siswa.php">Tambah Data Siswa</a>
+<form action="siswa.php" method="GET">
+	Search : <input type="text" name="search">
+	<input type="submit" value="Cari">
+</form>
 <table border="1">
 	<thead>
 		<tr>
@@ -46,7 +54,7 @@
 				<td>
 					<a href="edit_siswa.php?id=<?php echo $value['id_siswa'] ?>">Edit</a>
 					|
-					<a href="process/hapus_siswa.php?id=<?php echo $value['id_siswa'] ?>">Hapus</a>
+					<a href="process/hapus_siswa.php?id=<?php echo $value['id_siswa'] ?>" onclick="return confirm('Yakin akan menghapus data ini ?')">Hapus</a>
 				</td>
 			</tr>
 		<?php

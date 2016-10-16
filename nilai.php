@@ -1,14 +1,22 @@
 <?php
 	include 'config.php';
 	include 'models/model_nilai.php';
+	include 'models/model_siswa.php';
+	include 'models/model_mapel.php';
 
-	use _config\Config as Config;
 	use models\_model_nilai\Model_Nilai as Nilai;
+	use models\_model_siswa\Model_Siswa as Siswa;
+	use models\_model_mapel\Model_Mapel as Mapel;
 
-	$db = new Config;
 	$nilai = new Nilai;
+	$siswa = new Siswa;
+	$mapel = new Mapel;
 
-	$data_nilai = $nilai->SELECT_ALL();
+	if (isset($_GET['search']) AND $_GET['search'] != "") {
+		$data_nilai = $nilai->LIKE($_GET['search']);
+	} else {
+		$data_nilai = $nilai->SELECT_ALL();
+	}
 ?>
 
 <h1>Data Nilai</h1>
@@ -19,6 +27,10 @@
 <br><br>
 
 <a href="tambah_nilai.php">Tambah Data Nilai</a>
+<form action="nilai.php" method="GET">
+	Search : <input type="text" name="search">
+	<input type="submit" value="Cari">
+</form>
 <table border="1">
 	<thead>
 		<tr>
@@ -39,7 +51,7 @@
 				<td>
 					<a href="edit_nilai.php?id=<?php echo $value['id_nilai'] ?>">Edit</a>
 					|
-					<a href="process/hapus_nilai.php?id=<?php echo $value['id_nilai'] ?>">Hapus</a>
+					<a href="process/hapus_nilai.php?id=<?php echo $value['id_nilai'] ?>" onclick="return confirm('Yakin akan menghapus data ini ?')">Hapus</a>
 				</td>
 			</tr>
 		<?php

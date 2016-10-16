@@ -28,6 +28,16 @@
 			return $data[0];
 		}
 
+		public function LIKE($search) {
+			$this->db->select('*');			
+			$this->db->from('tb_mapel');
+			$this->db->like('mapel', $search);
+
+			$data = $this->db->get();
+
+			return $data;
+		}
+
 		public function INSERT($data) {
 			$result = $this->db->insert('tb_mapel', $data);
 

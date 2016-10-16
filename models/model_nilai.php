@@ -60,15 +60,55 @@
 			return $data;
 		}
 
-		public function INSERT($data) {
-			$result = $this->db->insert('tb_nilai', $data);
+		public function LIKE($search) {
+			$this->db->select('tb_nilai.id_nilai, tb_siswa.nama, tb_nilai.nilai, tb_mapel.mapel');
+			
+			$this->db->from('tb_siswa, tb_mapel, tb_nilai');
+			$this->db->where('tb_nilai.id_siswa', 'tb_siswa.id_siswa');
+			$this->db->where('tb_nilai.id_mapel', 'tb_mapel.id_mapel');
+			$this->db->and_like('tb_mapel.mapel', $search);
 
-			return $result;
+			$this->db->or_where('tb_nilai.id_siswa', 'tb_siswa.id_siswa');
+			$this->db->where('tb_nilai.id_mapel', 'tb_mapel.id_mapel');
+			$this->db->and_like('tb_siswa.nama', $search);
+
+			$this->db->or_where('tb_nilai.id_siswa', 'tb_siswa.id_siswa');
+			$this->db->where('tb_nilai.id_mapel', 'tb_mapel.id_mapel');
+			$this->db->and_like('tb_nilai.nilai', $search);
+
+			$data = $this->db->get();
+
+			return $data;
+		}
+
+		public function INSERT($data) {
+			$this->db->select('*');
+			$this->db->from('tb_nilai');
+			$this->db->where('id_siswa', $data['id_siswa']);
+			$this->db->where('id_mapel', $data['id_mapel']);
+
+			$data_duplikat = $this->db->get();
+
+			if (count($data_duplikat) == 0) {
+				$result = $this->db->insert('tb_nilai', $data);
+				return $result;
+			} else {
+				header('location: ../nilai.php');
+			}
 		}
 
 		public function DELETE($id) {
 			$this->db->delete("tb_nilai");
 			$this->db->where_delete("id_nilai", $id);
+
+			$result = $this->db->getDelete();
+
+			return $result;
+		}
+
+		public function CUSTOM_DELETE($field, $value) {
+			$this->db->delete("tb_nilai");
+			$this->db->where_delete($field, $value);
 
 			$result = $this->db->getDelete();
 

@@ -28,6 +28,17 @@
 			return $data[0];
 		}
 
+		public function LIKE($search) {
+			$this->db->select('*');			
+			$this->db->from('tb_siswa');
+			$this->db->like('nama', $search);
+			$this->db->like('alamat', $search);
+
+			$data = $this->db->get();
+
+			return $data;
+		}
+
 		public function INSERT($data) {
 			$result = $this->db->insert('tb_siswa', $data);
 

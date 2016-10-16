@@ -88,8 +88,8 @@
 
 			} else {
 				if (strpos($value, ".") == '') {
-						$value = "'" .$value ."'";
-					}
+					$value = "'" .$value ."'";
+				}
 
 				if ($this->SQL_where == '') {
 					$this->SQL_where .= "WHERE " .$tableCondition ." = " .$value ." ";
@@ -114,6 +114,25 @@
 					$this->SQL_where .= "WHERE " .$tableCondition ." LIKE '%" .$value ."%' ";
 				} else {
 					$this->SQL_where .= "OR " .$tableCondition ." LIKE '%" .$value ."%' ";
+				}
+			}
+		}
+
+		public function and_like($tableCondition, $value = "") {
+			if (is_array($tableCondition)) {
+				foreach ($tableCondition as $key => $value) {
+					if ($this->SQL_where == '') {
+						$this->SQL_where .= "WHERE " .$key ." LIKE '%" .$value ."%'";
+					} else {
+						$this->SQL_where .= "AND " .$key ." LIKE '%" .$value ."%' ";
+					}
+				}
+
+			} else {
+				if ($this->SQL_where == '') {
+					$this->SQL_where .= "WHERE " .$tableCondition ." LIKE '%" .$value ."%' ";
+				} else {
+					$this->SQL_where .= "AND " .$tableCondition ." LIKE '%" .$value ."%' ";
 				}
 			}
 		}
@@ -149,6 +168,7 @@
 				}
 				$index++;
 			}
+
 			$this->reset();
 
 			return $this->resultData;
@@ -229,6 +249,9 @@
 			$this->SQL_update .= $this->SQL_where_update;
 
 			$result = mysql_query($this->SQL_update);
+
+			$this->SQL_update = "";
+
 			return $result;
 		}
 
@@ -266,6 +289,8 @@
 			$this->SQL_delete .= $this->SQL_where_delete;
 
 			$result = mysql_query($this->SQL_delete);
+
+			$this->SQL_delete = "";
 			return $result;
 		}
 
